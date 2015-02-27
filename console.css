@@ -1,0 +1,71 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: #111;
+  color: white;
+  font-family: "Liberation mono", monospace;
+}
+body {
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  right: 1em;
+  bottom: 1em;
+}
+
+h1 {
+  font-size: 1.5em;
+  height: .6666em;
+  line-height: .6666em;
+  margin: 0;
+  padding: 0;
+}
+
+#log {
+  position: absolute;
+  width: 100%;
+  top: 2em;
+  bottom: 3em;
+  overflow: auto;
+  white-space: pre-wrap;
+  margin: 0;
+  padding: 0;
+}
+.logline {
+  display: block;
+  border-top: 1px dotted #333;
+  padding: .5em .25em;
+}
+.logline:first-child { border: 0 transparent; }
+.logline.inputline {
+  color: #999;
+}
+.logline.error {
+  color: #f99;
+}
+
+form {
+  position: absolute;
+  width: 100%;
+  height: 2em;
+  bottom: 0;
+  margin: 1em 0 0;
+  padding: 0;
+}
+#input {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 1.5em;
+  line-height: 1.5em;
+  padding: .25em;
+  color: inherit;
+  background-color: #242424;
+  border-width: 0;
+  font-family: inherit;
+}
+button {
+  display: none;
+}
