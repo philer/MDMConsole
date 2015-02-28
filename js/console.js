@@ -1,26 +1,57 @@
 /**
- * globals: MDMConsole
+ * globals: HtmlConsole
  */
 (function(doc, undefined) {
+  
   "use strict";
   
-  var mdc = window.MDMConsole = {log: log},
+  var template = '<pre id="console-log"></pre>'
+      + '<form id="console-form"><input id="console-input" type="text" autocomplete="off"/>'
+      + '<button>»</button></form>';
+  
+  var cnsl = window.HtmlConsole = {},
       
-      getId     = doc.getElementById.bind(doc),
-      getClass  = doc.getElementsByClassName.bind(doc),
-      getTag    = doc.getElementsByTagName.bind(doc),
+      getId      = doc.getElementById.bind(doc),
+      createElem = doc.createElement.bind(doc),
       
-      inputElem = getId("input"),
-      logElem   = getId("log"),
+      rollback   = [],
+      rollbackId = 0,
       
-      rollback  = [],
-      rollbackId = 0;
+      consoleElem = getId("console"),
+      inputElem,
+      logElem;
   
   /// INIT
+  (function() {
+    
+    if (!consoleElem) {
+      consoleElem = doc.body.appendChild(createElem("div"));
+      consoleElem.id = "console";
+    }
+    consoleElem.innerHTML = template;
+    inputElem = getId("console-input");
+    logElem   = getId("console-log");
+    
+    getId("console-form").addEventListener("submit", submit);
+    inputElem.addEventListener("keydown", keyNav);
+    // inputElem.focus();
   
-  getTag('form')[0].addEventListener("submit", submit);
-  inputElem.addEventListener("keypress", keyNav);
-  inputElem.focus();
+  })();
+  
+  /// Functions
+  
+  /**
+   * Execute a command
+   * @param  {string} cmd
+   */
+  cnsl.exec = function exec(cmd) {
+    logInput(cmd);
+    try {
+      cnsl.log(eval.call(null, cmd));
+    } catch (e) {
+      cnsl.error(e)
+    }
+  }
   
   /**
    * Submit handler for console input form
@@ -31,13 +62,8 @@
     
     var cmd = inputElem.value;
     inputElem.value = "";
-    logInput(cmd);
     
-    try {
-      mdc.log(eval.call(null, cmd));
-    } catch (e) {
-      mdc.error(e)
-    }
+    cnsl.exec(cmd);
     
     inputElem.focus();
   }
@@ -49,32 +75,40 @@
   function logInput(cmd) {
     rollback.push(cmd);
     rollbackId = rollback.length;
-    logElem.innerHTML += '<div class="logline inputline">» ' + cmd + '</div>';
-    scrollLog();
+    cnsl.log("» " + cmd, "input");
   }
   
   /**
    * Log a line
    * @param  {mixed} msg
    */
-  mdc.log = function log(msg, error) {
-    logElem.innerHTML += '<div class="logline">'
-        + mdc.formatString(msg, 3)
-        + '</div>';
+  cnsl.log = function log(msg, loglevel) {
+    var origMsg = msg;
+    
+    if (!(loglevel === "input" || msg instanceof Error)) {
+      msg = cnsl.formatString(msg, 3);
+    }
+    
+    var div = createElem("div");
+    div.className = "console-line" + (loglevel ? " console-" + loglevel + "line" : "");
+    div.appendChild(doc.createTextNode(msg));
+    logElem.appendChild(div);
     scrollLog();
-    console.log(msg);
+    
+    if (origMsg instanceof Error) {
+      // console.error(origMsg instanceof Error ? origMsg.message : origMsg);
+      throw origMsg;
+    } else {
+      console.log(origMsg);
+    }
   }
   
   /**
    * Log an error line
    * @param  {Error|string} msg
    */
-  mdc.error = function error(msg) {
-    logElem.innerHTML += '<div class="logline error">' + msg + '</div>';
-    scrollLog();
-    
-    // console.error(msg instanceof Error ? msg.message : msg);
-    throw msg;
+  cnsl.error = function error(msg) {
+    cnsl.log(msg, "error")
   }
   
   /**
@@ -128,7 +162,7 @@
    * @param  {integer} depth nesting depth to be displayed
    * @return {string}
    */
-  mdc.formatString = function formatString(x, depth) {
+  cnsl.formatString = function formatString(x, depth) {
     depth = +depth;
     
     switch (x) {
@@ -162,6 +196,8 @@
                 }) 
               .join(", ")
           + "}";
+      case "string":
+        return '"' + x + '"';
       
       default:
         return "" + x;

@@ -1,0 +1,78 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: black;
+  color: white;
+  font-family: "Liberation mono", monospace;
+  font-size: 14px;
+}
+body {
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  right: 1em;
+  bottom: 1em;
+}
+#console {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /*height: 50%;*/
+  height: auto;
+  top: 300px;
+  margin-top: 1em;
+}
+
+#mdm-alerts {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  height: 300px;
+  width: 100%;
+  padding: 1em;
+  background-color: #111;
+}
+h1 {
+  margin: 0 0 1em;
+  font-size: 1.5em;
+  height: .6666em;
+  line-height: .6666em;
+}
+
+#mdm-alerts input,
+#mdm-alerts button {
+  display: inline-block;
+  height: 1.3em;
+  line-height: 1.3em;
+  vertical-align: middle;
+  padding: 0;
+  color: inherit;
+  font-family: inherit;
+}
+#mdm-alerts button {
+  padding: 0 .25em;
+  cursor: pointer;
+}
+
+#mdm-alerts .mdm-alert-form,
+#mdm-alerts .mdm-alert-button {
+  margin: .33em 0;
+}
+#mdm-alerts .mdm-alert-form input {
+  margin: 0 .33em;
+  padding: 0 .33em;
+  background-color: #222;
+  border-width: 0;
+  /*border-bottom: 1px solid #555;*/
+  color: inherit;
+}
+#mdm-alerts .mdm-alert-form button {
+  background-color: #333;
+  border-width: 0;
+}
+#mdm-alerts .mdm-alert-button {
+  display: block;
+  background-color: #333;
+  border-width: 0;
+}
