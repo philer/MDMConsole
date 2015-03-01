@@ -17,8 +17,7 @@
       ];
   
   var re = /\{(\w+)\}/g,
-      html = "",
-      btns, forms;
+      html = "";
   
   // create forms html
   for (var i = 0, len = alerts.length ; i < len ; ++i) {
@@ -36,11 +35,8 @@
   }
   doc.getElementById("mdm-alerts").innerHTML += html;
   
-  btns  = doc.getElementsByClassName("mdm-alert-button");
-  forms = doc.getElementsByClassName("mdm-alert-form");
-  
   // apply button listeners
-  for (var i = btns.length ; i-- ; ) (function(btn) {
+  [].forEach.call(doc.getElementsByClassName("mdm-alert-button"), function(btn) {
     btn.addEventListener("click", function(evt) {
       evt.preventDefault();
       
@@ -52,10 +48,10 @@
       
       
     });
-  })(btns[i]);
+  });
   
   // apply form listeners
-  for (var i = forms.length ; i-- ; ) (function(form) {
+  [].forEach.call(doc.getElementsByClassName("mdm-alert-form"), function(form) {
     form.addEventListener("submit", function(evt) {
       evt.preventDefault();
       
@@ -70,6 +66,6 @@
       }
       
     });
-  })(forms[i]);
+  });
   
 })(document, HtmlConsole);

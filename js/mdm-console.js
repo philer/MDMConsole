@@ -29,7 +29,8 @@
   
   "use strict";
   
-  var functions = [
+  [
+    
     "mdm_enable",
     "mdm_disable",
     "mdm_prompt",
@@ -50,21 +51,27 @@
     "mdm_hide_suspend",
     "mdm_hide_quit",
     "mdm_hide_xdmcp",
-  ];
   
-  for (var i = functions.length ; i-- ; ) {
-    (function(name, old) {
-      
-      win[name] = function() {
-        var args = [].slice.apply(arguments);
-        cnsl.log("MDM called '" + name + "(" + args.join(',') + ")'", "input");
-        if (typeof old === "function") {
-          old.apply(win, args);
+  ].map(function(name) {
+  
+    var original = win[name];
+    
+    win[name] = function() {
+    
+      var args = [].slice.apply(arguments);
+      cnsl.log("MDM called '" + name + "(" + args.join(',') + ")'", "input");
+    
+      if (typeof original === "function") {
+        try {
+          original.apply(win, args);
+        } catch (e) {
+          cnsl.error(e);
         }
+        
       }
-      
-    })(functions[i], win[functions[i]]);
-  }
+    };
+  
+  });
   
   // var real_alert = win.alert;
   // win.alert = function(msg) {

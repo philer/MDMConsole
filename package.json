@@ -1,0 +1,16 @@
+{
+  "name": "MDMConsole",
+  "version": "0.1.0",
+  
+  "author": {
+    "name": "Philipp Miller",
+    "url": "http://github.com/philer"
+  },
+  
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "load-grunt-tasks": "~0.4.0",
+    "grunt-contrib-watch": "~0.4.4",
+    "grunt-contrib-jshint": "~0.10.0"
+  }
+}

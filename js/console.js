@@ -22,8 +22,7 @@
       logElem;
   
   /// INIT
-  (function() {
-    
+  function init() {
     if (!consoleElem) {
       consoleElem = doc.body.appendChild(createElem("div"));
       consoleElem.id = "console";
@@ -34,9 +33,11 @@
     
     getId("console-form").addEventListener("submit", submit);
     inputElem.addEventListener("keydown", keyNav);
+    consoleElem.addEventListener("click", inputElem.focus.bind(inputElem));
     // inputElem.focus();
-  
-  })();
+    
+    cnsl.log("HtmlConsole on '" + navigator.userAgent + "'");
+  }
   
   /// Functions
   
@@ -49,9 +50,9 @@
     try {
       cnsl.log(eval.call(null, cmd));
     } catch (e) {
-      cnsl.error(e)
+      cnsl.error(e);
     }
-  }
+  };
   
   /**
    * Submit handler for console input form
@@ -85,7 +86,7 @@
   cnsl.log = function log(msg, loglevel) {
     var origMsg = msg;
     
-    if (!(loglevel === "input" || msg instanceof Error)) {
+    if (loglevel !== "input") {
       msg = cnsl.formatString(msg, 3);
     }
     
@@ -101,15 +102,15 @@
     } else {
       console.log(origMsg);
     }
-  }
+  };
   
   /**
    * Log an error line
    * @param  {Error|string} msg
    */
   cnsl.error = function error(msg) {
-    cnsl.log(msg, "error")
-  }
+    cnsl.log(msg, "error");
+  };
   
   /**
    * Automatically scroll to the bottom of the log
@@ -163,7 +164,9 @@
    * @return {string}
    */
   cnsl.formatString = function formatString(x, depth) {
-    depth = +depth;
+    if (depth === undefined) {
+      depth = 1;
+    }
     
     switch (x) {
       case undefined:
@@ -183,19 +186,25 @@
         + "]";
     }
     
+    if (x instanceof Error) {
+      return x.name + ': "' + x.message + '"'
+        // + (x.fileName ? " in " + x.fileName : "")
+        + (x.stack ? "\n" + x.stack : "");
+    }
+    
     switch (typeof x) {
       case "function":
         return "function";
         
       case "object":
-        return "{"
+        return depth ? "{"
           + Object.getOwnPropertyNames(x)
               .map(
                 function(prop) {
-                  return prop + ": " + (depth ? formatString(x[prop], depth-1) : x[prop]);
+                  return prop + ": " + formatString(x[prop], depth-1);
                 }) 
               .join(", ")
-          + "}";
+          + "}" : "{…}";
       case "string":
         return '"' + x + '"';
       
@@ -203,5 +212,7 @@
         return "" + x;
     }
   };
+  
+  init();
   
 })(document);
