@@ -1,3 +1,13 @@
+/**
+ * MDMConsole theme specific js;
+ * Adds buttons and inputs for MDM API alert calls
+ * 
+ * globals: HtmlConsole
+ * 
+ * @author  Philipp Miller
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ * 
+ */
 (function(doc, cnsl) {
   
   "use strict";
